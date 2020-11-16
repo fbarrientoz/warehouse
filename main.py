@@ -14,12 +14,36 @@ Functionality:
 from menu import clear2, print_menu, print_header, print_product_info
 from product import Product
 import pickle
-#from os import system, name
+
 
 catalog = []
 idNumber = 0
 
-# Functions
+def disctinct_categories():
+    print_header("Discticn categories")
+    categories = []
+
+    for prod in catalog:
+        if prod.category not in categories:
+            categories.append(prod.category)
+    
+    for cat in categories:
+        print(cat)
+
+
+def most_expensive_items():
+    print_header("3 most expensive products prices")
+    prices = []
+    for prod in catalog:
+        prices.append(prod.price)
+
+    # sort the array
+    prices.sort(reverse=True)
+
+    # print
+    print(prices[0])
+    print(prices[1])
+    print(prices[2])
 
 
 def serialize_data():
@@ -50,12 +74,6 @@ def deserialize_data():
 
 
 def delete_product():
-    # show the catalog
-    # ask the use to chosose / type id
-    # travel array
-    # find the product with the id
-    # remove that product from the catalog
-
     print_header("Delete produc")
 
     display_products()
@@ -76,12 +94,11 @@ def delete_product():
 
 
 def update_product():
-
     print_header("Update product")
     display_products()
 
     print("***********************")
-    idUpdated = int(input("Give me the ID to deleted:"))
+    idUpdated = int(input("Give me the ID to update:"))
     print("***********************")
 
     found = False
@@ -117,29 +134,49 @@ def update_product_stock():
     print_header("Update product stock")
     display_products()
 
-    print("***********************")
-    idUpdated = int(input("Give me the ID to update stock:"))
-    print("***********************")
+    try:
+        print("***********************")
+        idUpdated = int(input("Give me the ID to update stock:"))
+        print("***********************")
 
-    found = False
-    for prod in catalog:
-        if(prod.id == idUpdated):
-            found = True
+        found = False
+        for prod in catalog:
+            if(prod.id == idUpdated):
+                found = True
+                stock = int(input("Give me a new stock: "))
+                prod.stock = stock
+                print("Product ["+str(idUpdated) +
+                      "] as been modified stock!!!!..")
 
-            title = prod.title
-            category = prod.category
-            price = prod.price
-            catalog.remove(prod)
+        if(not found):
+            print("ID not founded!!!... try again")
+    except:
+        print("Error on update stock!!!!!")
 
-            stock = int(input("Give me a stock: "))
 
-            new_product = Product(idUpdated, title, category, stock, price)
-            catalog.append(new_product)
+def update_product_price():
 
-            print("Product ["+str(idUpdated)+"] as been modified stock!!!!..")
+    print_header("Update product price")
+    display_products()
 
-    if(not found):
-        print("ID not founded!!!... try again")
+    try:
+        print("***********************")
+        idUpdated = int(input("Give me the ID to update price:"))
+        print("***********************")
+
+        found = False
+        for prod in catalog:
+            if(prod.id == idUpdated):
+                found = True
+                price = int(input("Give me a new price: "))
+                prod.price = price
+                print("Product ["+str(idUpdated) +
+                      "] as been modified price!!!!..")
+
+        if(not found):
+            print("ID not founded!!!... try again")
+    except:
+        print("Error on update price!!!!!")
 
 
 def display_cheaper_products():
@@ -154,10 +191,7 @@ def display_cheaper_products():
 
 
 def display_products():
-    # for x in range(len(catalog)):
-    #    print(str(catalog[x].id) + " | "+catalog[x].title)
-
-    print_header("Current catalog")
+    print_header("Catalog")
     for prod in catalog:
         print_product_info(prod)
 
@@ -183,7 +217,6 @@ def display_total_stock_value():
 """
 def display_cheaper_products():
     print_header("Creaper products")
-
     for prod in catalog.sort("price"):
         print_product_info(prod)
 """
@@ -193,7 +226,7 @@ def register_products():
     try:
         global idNumber
 
-        print_header("Fill data")
+        print_header("Add products")
         title = input("Give me a Title: ")
         category = input("Give me a Category: ")
         stock = int(input("Give me a stock: "))
@@ -204,8 +237,6 @@ def register_products():
             print("Error: Title should not be empty")
         if(len(category) < 1):
             print("Error: Category should not be empty")
-        # if(stock < 1):
-        #    print("Error: Stock should not be less than 1")
         if(price < 1):
             print("Error: Price should not be less than 1")
 
@@ -222,7 +253,7 @@ opc = ''
 
 deserialize_data()
 
-input("Press enter to continuo....")
+input("Press enter to continue....")
 
 
 while(opc != 'x'):
@@ -250,5 +281,12 @@ while(opc != 'x'):
     elif(opc == '8'):
         update_product_stock()
         serialize_data()
+    elif(opc == '9'):
+        update_product_price()
+        serialize_data()
+    elif(opc == '10'):
+        most_expensive_items()
+    elif(opc == '11'):
+        disctinct_categories()
 
     input('Enter to continue....')
